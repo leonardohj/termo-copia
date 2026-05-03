@@ -8,8 +8,8 @@ new class extends Component {
     public int $max = 5;
     public array $guesses = [];
     public int $guessNumber = 0;
-    public string $words = [];
-    public bool $won = false;
+    public array $words = [];
+    public array $won = [];
     public int $tries = 7;
 
     public function submit()
@@ -20,9 +20,16 @@ new class extends Component {
 
         $guess = strtoupper($this->input);
 
-        if ($guess === $this->word) {
-            $this->won = true;
+        foreach ($this->words as $word) {
+            $this->won[$word] = false;
         }
+
+        foreach ($this->words as $word) {
+            if ($guess === $word) {
+                $this->won[$word] = true;
+            }
+        }
+
         $result = [];
 
         for ($i = 0; $i < 5; $i++) {
@@ -49,7 +56,7 @@ new class extends Component {
 };
 ?>
 <div class="flex flex-col items-center gap-6 p-10">
-{{ $word   }}
+    {{ $word }}
     <!-- INPUT -->
     <input onblur="this.focus()" autofocus id="wordle-input" type="text" wire:model.live="input" maxlength="5"
         @disabled($won) class="border p-2 text-center uppercase absolute top-[-1000px]" />
